@@ -1,7 +1,8 @@
 #! /usr/bin/python3
 
-import pygame, sys, math, player, bullet, random
+import pygame, sys, math, bullet, random
 from pygame.locals import *
+from player import Player
 
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
@@ -23,10 +24,11 @@ mainClock = pygame.time.Clock()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-# player = pygame.Rect(300, 100, 50, 50)
-# playerImage = pygame.image.load('cross.png')
-p1 = player.Player(1, pygame.Rect(300,300,50,50))
+p1 = Player(1, pygame.Rect(300,300,50,50))
 p1Image = p1.image
+
+#bullety beda na serwerze
+bullets = []
 
 moveLeft = False
 moveRight = False
@@ -35,14 +37,14 @@ moveDown = False
 
 MOVESPEED = 6
 
-
-
+#GAME LOOP
 while True:
-    # Check for events.
     mouse_pos = pygame.mouse.get_pos()
-    player_direction = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
-    player_direction = math.degrees(player_direction)
-    print(str(mouse_pos) + " " + str(player_direction))
+    p1.angle = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
+    p1.angle = math.degrees(p1.angle)
+    # print(str(mouse_pos) + " " + str(p1.angle))
+
+    # Check for events.
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -74,10 +76,14 @@ while True:
             if event.key == K_DOWN or event.key == K_s:
                 moveDown = False
             if event.key == K_x:
-                p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
-                p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
+                bullets.append(p1.shoot())
+                # p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
+                # p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
 
-    windowSurface.fill(BLACK)
+    for b in bullets:
+        b.update()
+
+    windowSurface.fill(WHITE)
 
     # Move the player.
     if moveDown and p1.rect.bottom < WINDOWHEIGHT:
@@ -89,11 +95,12 @@ while True:
     if moveRight and p1.rect.right < WINDOWWIDTH:
         p1.rect.right += MOVESPEED
 
-    # rotatedPlayerImage = pygame.transform.rotate(playerImage, -player_direction + 90)
-    rotatedPlayerImage = rot_center(p1Image, -player_direction + 90)
+    rotatedPlayerImage = rot_center(p1Image, -p1.angle + 90)
     # Draw the player onto the surface.
-    # pygame.draw.rect(windowSurface, BLACK, player)
     windowSurface.blit(rotatedPlayerImage, p1.rect)
+
+    for b in bullets:
+        windowSurface.blit(b.image, b.rect)
 
     pygame.display.update()
     mainClock.tick(60)
