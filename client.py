@@ -42,7 +42,7 @@ while True:
 	mouse_pos = pygame.mouse.get_pos()
 	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
 	p1.angle = math.degrees(p1.angleRad)
-	#print(str(mouse_pos) + " " + str(p1.angle))
+	# print(str(mouse_pos) + " " + str(p1.angleRad))
 
 	# Check for events.
 	for event in pygame.event.get():
@@ -76,11 +76,11 @@ while True:
 			if event.key == K_DOWN or event.key == K_s:
 				moveDown = False
 			if event.key == K_x:
-				bullets.append(p1.shoot(mouse_pos))
+				bullets.append(p1.shoot())
 				# p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
 				# p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
 
-	
+
 
 	windowSurface.fill(WHITE)
 
@@ -98,12 +98,12 @@ while True:
 	# Draw the player onto the surface.
 	windowSurface.blit(rotatedPlayerImage, p1.rect)
 
-	
+
 	for b in bullets:
 		b.update()
 	for b in bullets:
 		windowSurface.blit(b.image, b.rect)
-	
+
 
 	pygame.display.update()
 	mainClock.tick(60)
