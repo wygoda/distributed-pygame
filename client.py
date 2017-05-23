@@ -1,12 +1,21 @@
 #! /usr/bin/python3
 
-import pygame, sys
+import pygame, sys, math
 from pygame.locals import *
 
 class player:
     def __init__(self):
         #constructor - id, rect, hp, bullets?
         pass
+
+def rot_center(image, angle):
+    """rotate an image while keeping its center and size"""
+    orig_rect = image.get_rect()
+    rot_image = pygame.transform.rotate(image, angle)
+    rot_rect = orig_rect.copy()
+    rot_rect.center = rot_image.get_rect().center
+    rot_image = rot_image.subsurface(rot_rect).copy()
+    return rot_image
 
 pygame.init()
 
@@ -20,6 +29,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 player = pygame.Rect(300, 100, 50, 50)
+playerImage = pygame.image.load('strzalka.png')
 
 moveLeft = False
 moveRight = False
@@ -28,10 +38,14 @@ moveDown = False
 
 MOVESPEED = 6
 
+
+
 while True:
     # Check for events.
     mouse_pos = pygame.mouse.get_pos()
-    print(mouse_pos)
+    player_direction = math.atan2(player.centery - mouse_pos[1], player.centerx - mouse_pos[0])
+    player_direction = math.degrees(player_direction)
+    print(str(mouse_pos) + " " + str(player_direction))
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -78,8 +92,11 @@ while True:
     if moveRight and player.right < WINDOWWIDTH:
         player.right += MOVESPEED
 
+    # rotatedPlayerImage = pygame.transform.rotate(playerImage, -player_direction + 90)
+    rotatedPlayerImage = rot_center(playerImage, -player_direction + 90)
     # Draw the player onto the surface.
-    pygame.draw.rect(windowSurface, BLACK, player)
+    # pygame.draw.rect(windowSurface, BLACK, player)
+    windowSurface.blit(rotatedPlayerImage, player)
 
     pygame.display.update()
     mainClock.tick(60)
