@@ -10,6 +10,5 @@ class Player:
 		self.angle = 0
 
 	def shoot(self,mousePos):
-		print("strzelam")
-		b = Bullet(1, self,mousePos)
+		b = Bullet(1, self)
 		return b
