@@ -28,8 +28,8 @@ mainClock = pygame.time.Clock()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-player = pygame.Rect(300, 100, 50, 50)
-playerImage = pygame.image.load('strzalka.png')
+player = pygame.Rect(300, 100, 70, 70)
+playerImage = pygame.image.load('cross.png')
 
 moveLeft = False
 moveRight = False
