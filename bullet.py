@@ -14,9 +14,9 @@ class Bullet:
 		self.velocityY = -math.sin(player.angleRad)
 		
 		#got to normalize velocity so the bullet won't be faster when fired diagonally
-		euclid_dist = math.sqrt(math.pow(self.velocityX,2)+math.pow(self.velocityY,2))
-		self.velocityX = self.velocityX*self.speed*euclid_dist
-		self.velocityY = self.velocityY*self.speed*euclid_dist
+		velocityMagnitude = math.sqrt(math.pow(self.velocityX,2)+math.pow(self.velocityY,2))
+		self.velocityX = self.velocityX*self.speed*velocityMagnitude
+		self.velocityY = self.velocityY*self.speed*velocityMagnitude
 		
 		self.image = pygame.image.load("bullet.png")
 		self.image = pygame.transform.rotate(self.image,90 - self.angle)
