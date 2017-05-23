@@ -30,6 +30,8 @@ MOVESPEED = 6
 
 while True:
     # Check for events.
+    mouse_pos = pygame.mouse.get_pos()
+    print(mouse_pos)
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
