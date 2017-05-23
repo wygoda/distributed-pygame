@@ -5,13 +5,13 @@ from pygame.locals import *
 from player import Player
 
 def rot_center(image, angle):
-    """rotate an image while keeping its center and size"""
-    orig_rect = image.get_rect()
-    rot_image = pygame.transform.rotate(image, angle)
-    rot_rect = orig_rect.copy()
-    rot_rect.center = rot_image.get_rect().center
-    rot_image = rot_image.subsurface(rot_rect).copy()
-    return rot_image
+	"""rotate an image while keeping its center and size"""
+	orig_rect = image.get_rect()
+	rot_image = pygame.transform.rotate(image, angle)
+	rot_rect = orig_rect.copy()
+	rot_rect.center = rot_image.get_rect().center
+	rot_image = rot_image.subsurface(rot_rect).copy()
+	return rot_image
 
 pygame.init()
 
@@ -39,68 +39,71 @@ MOVESPEED = 6
 
 #GAME LOOP
 while True:
-    mouse_pos = pygame.mouse.get_pos()
-    p1.angle = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
-    p1.angle = math.degrees(p1.angle)
-    # print(str(mouse_pos) + " " + str(p1.angle))
+	mouse_pos = pygame.mouse.get_pos()
+	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
+	p1.angle = math.degrees(p1.angleRad)
+	#print(str(mouse_pos) + " " + str(p1.angle))
 
-    # Check for events.
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == KEYDOWN:
-            # Change the keyboard variables.
-            if event.key == K_LEFT or event.key == K_a:
-                moveRight = False
-                moveLeft = True
-            if event.key == K_RIGHT or event.key == K_d:
-                moveLeft = False
-                moveRight = True
-            if event.key == K_UP or event.key == K_w:
-                moveDown = False
-                moveUp = True
-            if event.key == K_DOWN or event.key == K_s:
-                moveUp = False
-                moveDown = True
-        if event.type == KEYUP:
-            if event.key == K_ESCAPE:
-                pygame.quit()
-                sys.exit()
-            if event.key == K_LEFT or event.key == K_a:
-                moveLeft = False
-            if event.key == K_RIGHT or event.key == K_d:
-                moveRight = False
-            if event.key == K_UP or event.key == K_w:
-                moveUp = False
-            if event.key == K_DOWN or event.key == K_s:
-                moveDown = False
-            if event.key == K_x:
-                bullets.append(p1.shoot())
-                # p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
-                # p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
+	# Check for events.
+	for event in pygame.event.get():
+		if event.type == QUIT:
+			pygame.quit()
+			sys.exit()
+		if event.type == KEYDOWN:
+			# Change the keyboard variables.
+			if event.key == K_LEFT or event.key == K_a:
+				moveRight = False
+				moveLeft = True
+			if event.key == K_RIGHT or event.key == K_d:
+				moveLeft = False
+				moveRight = True
+			if event.key == K_UP or event.key == K_w:
+				moveDown = False
+				moveUp = True
+			if event.key == K_DOWN or event.key == K_s:
+				moveUp = False
+				moveDown = True
+		if event.type == KEYUP:
+			if event.key == K_ESCAPE:
+				pygame.quit()
+				sys.exit()
+			if event.key == K_LEFT or event.key == K_a:
+				moveLeft = False
+			if event.key == K_RIGHT or event.key == K_d:
+				moveRight = False
+			if event.key == K_UP or event.key == K_w:
+				moveUp = False
+			if event.key == K_DOWN or event.key == K_s:
+				moveDown = False
+			if event.key == K_x:
+				bullets.append(p1.shoot(mouse_pos))
+				# p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
+				# p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
 
-    for b in bullets:
-        b.update()
+	
 
-    windowSurface.fill(WHITE)
+	windowSurface.fill(WHITE)
 
-    # Move the player.
-    if moveDown and p1.rect.bottom < WINDOWHEIGHT:
-        p1.rect.top += MOVESPEED
-    if moveUp and p1.rect.top > 0:
-        p1.rect.top -= MOVESPEED
-    if moveLeft and p1.rect.left > 0:
-        p1.rect.left -= MOVESPEED
-    if moveRight and p1.rect.right < WINDOWWIDTH:
-        p1.rect.right += MOVESPEED
+	# Move the player.
+	if moveDown and p1.rect.bottom < WINDOWHEIGHT:
+		p1.rect.top += MOVESPEED
+	if moveUp and p1.rect.top > 0:
+		p1.rect.top -= MOVESPEED
+	if moveLeft and p1.rect.left > 0:
+		p1.rect.left -= MOVESPEED
+	if moveRight and p1.rect.right < WINDOWWIDTH:
+		p1.rect.right += MOVESPEED
 
-    rotatedPlayerImage = rot_center(p1Image, -p1.angle + 90)
-    # Draw the player onto the surface.
-    windowSurface.blit(rotatedPlayerImage, p1.rect)
+	rotatedPlayerImage = rot_center(p1Image, 90-p1.angle)
+	# Draw the player onto the surface.
+	windowSurface.blit(rotatedPlayerImage, p1.rect)
 
-    for b in bullets:
-        windowSurface.blit(b.image, b.rect)
+	
+	for b in bullets:
+		b.update()
+	for b in bullets:
+		windowSurface.blit(b.image, b.rect)
+	
 
-    pygame.display.update()
-    mainClock.tick(60)
+	pygame.display.update()
+	mainClock.tick(60)
