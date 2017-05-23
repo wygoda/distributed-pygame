@@ -20,7 +20,7 @@ def rot_center(image, angle):
 pygame.init()
 
 WINDOWWIDTH = 700
-WINDOWHEIGHT = 700
+WINDOWHEIGHT = 500
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
 mainClock = pygame.time.Clock()
