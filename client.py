@@ -77,10 +77,6 @@ while True:
 				moveDown = False
 			if event.key == K_x:
 				bullets.append(p1.shoot())
-				# p1.rect.top = random.randint(0, WINDOWHEIGHT - p1.rect.height)
-				# p1.rect.left = random.randint(0, WINDOWWIDTH - p1.rect.width)
-
-
 
 	windowSurface.fill(WHITE)
 
@@ -98,12 +94,10 @@ while True:
 	# Draw the player onto the surface.
 	windowSurface.blit(rotatedPlayerImage, p1.rect)
 
-
 	for b in bullets:
 		b.update()
 	for b in bullets:
 		windowSurface.blit(b.image, b.rect)
-
 
 	pygame.display.update()
 	mainClock.tick(60)
