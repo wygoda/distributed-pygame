@@ -32,7 +32,7 @@ while 1:
     #receiving data from clients
     for client in clients:
         bin_data = client_sock.recv(buf)
-        #TODO: close() if no data
+        #TODO: close() and remove from clients if no data
         print("unpickling from: {}".format(address))
         data = pickle.loads(bin_data)
         print("id: {}, {}".format(data.id, data.rect))
