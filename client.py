@@ -25,6 +25,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 p1 = Player(1, pygame.Rect(300,300,50,50))
+print(p1.rect)
 p1Image = p1.image
 
 #bullety beda na serwerze
