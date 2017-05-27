@@ -5,6 +5,8 @@ import pygame, sys, pickle, random, socket
 from pygame.locals import *
 from player import Player
 from threading import Thread, Lock, currentThread
+from gamestate import Gamestate
+from bullet import Bullet
 
 #server loop: check for incoming connections -> pygame computations -> send updates to clients -> repeat
 
@@ -24,6 +26,8 @@ class Server:
         self.clients = {}
         self.clients_mutex = Lock()
 
+        self.gamestate = Gamestate()
+
     def accept_connections(self):
         player_counter = 0
         t = currentThread()
@@ -41,8 +45,13 @@ class Server:
                 player_counter += 1
                 player = Player(player_counter, pygame.Rect(300,300,50,50)) #TODO: randomize spawn place
                 with self.clients_mutex:
-                    clients[player] = Client(client_sock, addr)
-                #TODO: send this info to the client
+                    clients[player.id] = Client(client_sock, addr)
+                #send this info to the client
+                self.gamestate.addPlayer(player)
+                bin_player = pickle.dumps(player)
+                client_sock.send(bin_player)
+                bin_gamestate = pickle.dumps(self.gamestate)
+                client_sock.send(bin_gamestate)
                 print("accepted: playerid {}, addr {}".format(player.id, addr))
 
     #SERVER LOOP
@@ -52,16 +61,14 @@ class Server:
         while 1:
             print("in the loop")
             #receiving data from clients
-            for player, client in self.clients:
+            for player_id, client in self.clients:
                 bin_data = client_sock.recv(buf)
                 #TODO: close() and remove from clients if no data
-                print("unpickling from: {}".format(address))
-                data = pickle.loads(bin_data)
-                print("id: {}, {}".format(data.id, data.rect))
+                updated_player_data = pickle.loads(bin_data)
+                self.gamestate.updatePlayer(player_id, updated_player_data)
 
             #pygame computations (players positions, bullets, winning condition etc)
-            #...
-
+            gamestate.update()
 
             #sending updates to clients
             #...

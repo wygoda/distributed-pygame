@@ -26,5 +26,7 @@ while (1):
     bin_data = pickle.dumps(player)
     if(tcp_sock.send(bin_data)):
         print("Sending message '" + str(bin_data) + "'...")
+    bin_data = "dupadupa".encode()
+    tcp_sock.send(bin_data)
 
 TCPSock.close()

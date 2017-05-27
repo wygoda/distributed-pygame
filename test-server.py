@@ -27,14 +27,20 @@ client_sock, addr = tcp_server_sock.accept()
 print("accepted: {}".format(addr))
 
 while 1:
-    (bin_data, address) = client_sock.recv(buf)
+    bin_data = client_sock.recv(buf)
     # str_data = bin_data.decode()
     # if (str_data == "\quit"):
     #     print("Quiting!")
     #     break
     # else:
-    print("unpickling from: {}".format(address))
-    data = pickle.loads(bin_data)
-    print("id: {}, {}".format(data.id, data.rect))
+    # print("unpickling from: {}".format(addr))
+    try:
+        data = pickle.loads(bin_data)
+        print("id: {}, {}".format(data.id, data.rect))
+    except:
+        data = bin_data.decode()
+        print(data)
+
+
 
 TCPSock.close()
