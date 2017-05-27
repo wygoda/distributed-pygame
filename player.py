@@ -9,7 +9,9 @@ class Player:
         self.image = pygame.image.load("sprites/cross.png")
         self.angle = 0
         self.angleRad = 0
+        self.bullets = []
 
     def shoot(self):
-        b = Bullet(1, self)
+        b = Bullet(-1, self)
+        self.bullets.append(b)
         return b

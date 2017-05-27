@@ -41,7 +41,7 @@ class Server:
                 pass
 
             if connected:
-                print("asd")
+                # print("asd")
                 player_counter += 1
                 player = Player(player_counter, pygame.Rect(300,300,50,50)) #TODO: randomize spawn place
                 with self.clients_mutex:
@@ -59,10 +59,11 @@ class Server:
         accept_conn_thread = Thread(target=self.accept_connections)
         accept_conn_thread.start()
         while 1:
-            print("in the loop")
-            #receiving data from clients
+            # print("in the loop")
+            #receiving data from clients, client have to send their player object,
+            #bullets are stored in players to make it easier to transmit
             for player_id, client in self.clients:
-                bin_data = client_sock.recv(buf)
+                bin_data = client.sock.recv(buf)
                 #TODO: close() and remove from clients if no data
                 updated_player_data = pickle.loads(bin_data)
                 self.gamestate.updatePlayer(player_id, updated_player_data)
@@ -71,9 +72,11 @@ class Server:
             gamestate.update()
 
             #sending updates to clients
-            #...
+            bin_gamestate = pickle.dumps(self.gamestate)
+            for player_id, client in self.clients:
+                client.sock.send(bin_gamestate)
 
-        print("koniec")
+        # print("koniec")
         accept_conn_thread.do_run = False
         accept_conn_thread.join()
 
