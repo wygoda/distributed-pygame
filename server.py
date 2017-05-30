@@ -86,7 +86,10 @@ class Server:
                         del(self.clients[player_id])
 
             #pygame computations (players positions, bullets, winning condition etc)
-            self.gamestate.update()
+            with gamestate_cond:
+                self.gamestate.update()
+                gamestate_ready = True
+                gamestate_cond.notifyAll()
             # if len(self.gamestate.players)>0:
             #     for p in self.gamestate.players:
             #         print(p)
@@ -111,16 +114,21 @@ class ClientThread(Thread):
         self.client = client
 
     def updateToClient(self):
-        pass
+        with gamestate_cond:
+            while not gamestate_ready:
+                gamestate_cond.wait()
+
 
     def updateFromClient(self):
         pass
 
     def run(self):
-        updateFromClient()
-        #cond_lock here to check if gamestate is ready to be sent to clients
-        updateToClient()
+        # updateFromClient()
+        # #cond_lock here to check if gamestate is ready to be sent to clients
+        # updateToClient()
 
+        #can we just call ClientThread's methods in Server.run() instead of doing everything in ClientThread.run()?
+        pass
 
 host, port = '192.168.1.110', 7777
 
