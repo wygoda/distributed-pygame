@@ -16,6 +16,7 @@ class Bullet:
 		self.velocityX = -math.cos(player.angleRad)*self.speed
 		self.velocityY = -math.sin(player.angleRad)*self.speed
 
+		self.rect.move_ip(self.velocityX*5,self.velocityY*5)
 		#it generates a pickling issue on windows
 		# self.image = pygame.image.load("sprites/bullet.png")
 		# self.image = pygame.transform.rotate(self.image,90 - player.angle)

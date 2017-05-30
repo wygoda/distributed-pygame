@@ -43,10 +43,14 @@ class Gamestate:
             for j in range(len(p.bullets)):
                 p.bullets[j].update()
                 killedIndex = p.bullets[j].rect.collidelist(self.players)
-                # if killedIndex != -1:
-                #     self.players[killedIndex].dead = True
-                #     p.bullets[j].ttl = 0
+                if killedIndex != -1:
+                    if not self.players[killedIndex].dead:
+                        self.players[killedIndex].dead = True
+                        p.bullets[j].ttl = 0
+                        print("player hit: {}".format(killedIndex))
+                        for pl in self.players:
+                            print(pl)
 
             p.bullets[:] = [b for b in p.bullets if b.ttl > 0]
 
-        self.players[:] = [p for p in self.players if not p.dead]
+        # self.players[:] = [p for p in self.players if not p.dead]

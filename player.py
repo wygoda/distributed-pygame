@@ -21,4 +21,4 @@ class Player:
 
     def __str__(self):
         bullets = ",".join(str(b) for b in self.bullets)
-        return "PLAYER: id:{}, {}, bullets:{}".format(self.id, self.rect, bullets)
+        return "PLAYER: id:{}, dead:{}, {}, bullets:{}".format(self.id, self.dead, self.rect, bullets)

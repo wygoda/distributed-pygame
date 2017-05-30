@@ -62,50 +62,50 @@ while True:
 		if p.id == p1.id:
 			p1 = p
 			break
+	print(p1)
 
-	if not p1.dead:
-		mouse_pos = pygame.mouse.get_pos()
-		p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
-		p1.angle = math.degrees(p1.angleRad)
-		# print(str(mouse_pos) + " " + str(p1.angleRad))
+	mouse_pos = pygame.mouse.get_pos()
+	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
+	p1.angle = math.degrees(p1.angleRad)
+	# print(str(mouse_pos) + " " + str(p1.angleRad))
 
-		# Check for events.
-		for event in pygame.event.get():
-			if event.type == QUIT:
+	windowSurface.fill(WHITE)
+	
+	# Check for events.
+	for event in pygame.event.get():
+		if event.type == QUIT:
+			pygame.quit()
+			sys.exit()
+		if event.type == KEYDOWN:
+			# Change the keyboard variables.
+			if event.key == K_LEFT or event.key == K_a:
+				moveRight = False
+				moveLeft = True
+			if event.key == K_RIGHT or event.key == K_d:
+				moveLeft = False
+				moveRight = True
+			if event.key == K_UP or event.key == K_w:
+				moveDown = False
+				moveUp = True
+			if event.key == K_DOWN or event.key == K_s:
+				moveUp = False
+				moveDown = True
+		if event.type == KEYUP:
+			if event.key == K_ESCAPE:
 				pygame.quit()
 				sys.exit()
-			if event.type == KEYDOWN:
-				# Change the keyboard variables.
-				if event.key == K_LEFT or event.key == K_a:
-					moveRight = False
-					moveLeft = True
-				if event.key == K_RIGHT or event.key == K_d:
-					moveLeft = False
-					moveRight = True
-				if event.key == K_UP or event.key == K_w:
-					moveDown = False
-					moveUp = True
-				if event.key == K_DOWN or event.key == K_s:
-					moveUp = False
-					moveDown = True
-			if event.type == KEYUP:
-				if event.key == K_ESCAPE:
-					pygame.quit()
-					sys.exit()
-				if event.key == K_LEFT or event.key == K_a:
-					moveLeft = False
-				if event.key == K_RIGHT or event.key == K_d:
-					moveRight = False
-				if event.key == K_UP or event.key == K_w:
-					moveUp = False
-				if event.key == K_DOWN or event.key == K_s:
-					moveDown = False
-				if event.key == K_x:
-					p1.shoot()
-					print(p1)
+			if event.key == K_LEFT or event.key == K_a:
+				moveLeft = False
+			if event.key == K_RIGHT or event.key == K_d:
+				moveRight = False
+			if event.key == K_UP or event.key == K_w:
+				moveUp = False
+			if event.key == K_DOWN or event.key == K_s:
+				moveDown = False
+			if event.key == K_x:
+				p1.shoot()
 
-		windowSurface.fill(WHITE)
-
+	if not p1.dead:
 		# Move the player.
 		if moveDown and p1.rect.bottom < WINDOWHEIGHT:
 			p1.rect.top += MOVESPEED
@@ -127,6 +127,7 @@ while True:
 	sent_bytes_count = server_connection.send(bin_player)
 	if sent_bytes_count:
 		print("bin_player size: {}; sent_bytes_count: {}".format(len(bin_player), sent_bytes_count))
+
 
 	#Draw players from the server
 	for p in gamestate.players:
