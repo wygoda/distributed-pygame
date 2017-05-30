@@ -75,7 +75,8 @@ while True:
 				moveUp = False
 			if event.key == K_DOWN or event.key == K_s:
 				moveDown = False
-			if event.key == K_x:
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			if pygame.mouse.get_pressed()[0]:
 				bullets.append(p1.shoot())
 
 	windowSurface.fill(WHITE)
