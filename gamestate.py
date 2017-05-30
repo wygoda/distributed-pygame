@@ -41,7 +41,6 @@ class Gamestate:
         for i in range(len(self.players)):
             p = self.players[i]
             for j in range(len(p.bullets)):
-                print(j)
                 p.bullets[j].update()
 
             p.bullets[:] = [b for b in p.bullets if b.ttl > 0]
