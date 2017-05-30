@@ -14,7 +14,7 @@ def rot_center(image, angle):
 	rot_image = rot_image.subsurface(rot_rect).copy()
 	return rot_image
 
-host, port = 'localhost', 7777
+host, port = '192.168.1.110', 7777
 addr = (host, port)
 buf = 2048
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,8 +22,8 @@ server_connection.connect(addr)
 
 pygame.init()
 
-WINDOWWIDTH = 700
-WINDOWHEIGHT = 500
+WINDOWWIDTH = 1024
+WINDOWHEIGHT = 640
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
 mainClock = pygame.time.Clock()

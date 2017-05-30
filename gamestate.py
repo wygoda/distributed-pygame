@@ -15,10 +15,10 @@ class Gamestate:
         return
 
     def removePlayer(self, player_id):
-        for p in self.players:
-            if p.id == player_id:
-                self.players.remove(p)
-            break
+        for i in range(len(self.players)):
+            if self.players[i].id == player_id:
+                del(self.players[i])
+                break
         return
 
     def updatePlayer(self, id, new_data):

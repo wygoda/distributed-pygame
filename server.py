@@ -76,6 +76,7 @@ class Server:
                         updated_player_data = pickle.loads(bin_data)
                         self.gamestate.updatePlayer(player_id, updated_player_data)
                     else:
+                        print("removePlayer")
                         #close() and remove from clients if no data
                         self.gamestate.removePlayer(player_id)
                         client.sock.close()
@@ -83,9 +84,9 @@ class Server:
 
             #pygame computations (players positions, bullets, winning condition etc)
             self.gamestate.update()
-            if len(self.gamestate.players)>0:
-                for p in self.gamestate.players:
-                    print(p)
+            # if len(self.gamestate.players)>0:
+            #     for p in self.gamestate.players:
+            #         print(p)
 
             #sending updates to clients
             bin_gamestate = pickle.dumps(self.gamestate)
@@ -102,7 +103,7 @@ class Client:
         self.sock = sock
         self.addr = addr
 
-host, port = 'localhost', 7777
+host, port = '192.168.1.110', 7777
 
 #MAIN
 buf = 2048
