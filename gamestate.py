@@ -24,8 +24,10 @@ class Gamestate:
     def updatePlayer(self, id, new_data):
         for p in self.players:
             if p.id == new_data.id:
-                p = new_data
-                print(p)
+                p.rect = new_data.rect
+                p.angle = new_data.angle
+                p.angleRad = new_data.angleRad
+                p.bullets = new_data.bullets
                 break
         return
 
@@ -36,4 +38,8 @@ class Gamestate:
 
     def update(self):
         #GAME LOGIC: for each player{ bla bla for each bullet{} bla bla}
-        pass
+        for i in range(len(self.players)):
+            p = self.players[i]
+            for j in range(len(p.bullets)):
+                print("update bulletow")
+                p.bullets[j].update()

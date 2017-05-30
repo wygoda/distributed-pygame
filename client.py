@@ -95,6 +95,7 @@ while True:
 				moveDown = False
 			if event.key == K_x:
 				p1.shoot()
+				print(p1)
 
 	windowSurface.fill(WHITE)
 

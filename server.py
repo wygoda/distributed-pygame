@@ -74,9 +74,7 @@ class Server:
                     bin_data = client.sock.recv(buf)
                     if bin_data:
                         updated_player_data = pickle.loads(bin_data)
-                        # print(updated_player_data)
                         self.gamestate.updatePlayer(player_id, updated_player_data)
-                        print("received update from {}".format(player_id))
                     else:
                         #close() and remove from clients if no data
                         self.gamestate.removePlayer(player_id)
@@ -85,8 +83,9 @@ class Server:
 
             #pygame computations (players positions, bullets, winning condition etc)
             self.gamestate.update()
-            # if len(self.gamestate.players)>0:
-            #     print("player1 pos: {}".format(self.gamestate.players[0].rect))
+            if len(self.gamestate.players)>0:
+                for p in self.gamestate.players:
+                    print(p)
 
             #sending updates to clients
             bin_gamestate = pickle.dumps(self.gamestate)
