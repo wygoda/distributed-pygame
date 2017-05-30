@@ -12,7 +12,9 @@ class Player:
         self.angle = 0
         self.angleRad = 0
         self.bullets = []
+        self.hp = 3
         self.dead = False
+        self.overhead_label_text = ""
 
     def shoot(self):
         b = Bullet(-1, self)
@@ -22,3 +24,7 @@ class Player:
     def __str__(self):
         bullets = ",".join(str(b) for b in self.bullets)
         return "PLAYER: id:{}, dead:{}, {}, bullets:{}".format(self.id, self.dead, self.rect, bullets)
+
+    def updateOverheadLabelText(self):
+        self.overhead_label_text = "Player{}, HP:{}/3".format(self.id, self.hp)
+        return self.overhead_label_text
