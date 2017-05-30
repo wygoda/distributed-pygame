@@ -98,7 +98,7 @@ class Server:
         accept_conn_thread.do_run = False
         accept_conn_thread.join()
 
-class Client:
+class Client(Thread):
     def __init__(self, sock, addr):
         self.sock = sock
         self.addr = addr
