@@ -45,7 +45,9 @@ class Gamestate:
                 killedIndex = p.bullets[j].rect.collidelist(self.players)
                 if killedIndex != -1:
                     if not self.players[killedIndex].dead:
-                        self.players[killedIndex].dead = True
+                        self.players[killedIndex].hp -= 1
+                        if self.players[killedIndex].hp < 1:
+                            self.players[killedIndex].dead = True
                         p.bullets[j].ttl = 0
                         print("player hit: {}".format(killedIndex))
                         for pl in self.players:
