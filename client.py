@@ -70,7 +70,7 @@ while True:
 	# print(str(mouse_pos) + " " + str(p1.angleRad))
 
 	windowSurface.fill(WHITE)
-	
+
 	# Check for events.
 	for event in pygame.event.get():
 		if event.type == QUIT:
@@ -102,9 +102,9 @@ while True:
 				moveUp = False
 			if event.key == K_DOWN or event.key == K_s:
 				moveDown = False
-			if event.key == K_x:
-				p1.shoot()
-
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			p1.shoot()
+			# if pygame.mouse.get_pressed()[0]:
 	if not p1.dead:
 		# Move the player.
 		if moveDown and p1.rect.bottom < WINDOWHEIGHT:
