@@ -103,9 +103,9 @@ class Client:
         self.sock = sock
         self.addr = addr
 
-host, port = '192.168.1.110', 7777
+host, port = 'localhost', 7777
 
 #MAIN
-buf = 3072
+buf = 4096
 s = Server(host, port, buf)
 s.run()

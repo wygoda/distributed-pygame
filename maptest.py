@@ -9,60 +9,33 @@ WIDTH = 16
 HEIGHT = 10
 # Set up the window.
 windowSurface = pygame.display.set_mode((TILESIZE*WIDTH,TILESIZE*HEIGHT), 0, 32)
-pygame.display.set_caption('Hello world! - nazwa okna')
+pygame.display.set_caption('SHOOTER')
 
 WHITE = (255, 255, 255)
 
 
-
-windowSurface.fill(WHITE)
 #draw uppper left corner
-image = pygame.image.load("sprites/wall1.png")
-rect = pygame.Rect(0,0,TILESIZE,TILESIZE)
-windowSurface.blit(image,rect)
-
-#draw upper wall
-image = pygame.image.load("sprites/wall2.png")
-for col in range(1,WIDTH-1):
-	rect = pygame.Rect(col*TILESIZE,0,TILESIZE,TILESIZE)
-	windowSurface.blit(image,rect)
-
-#draw upper right corner
-image = pygame.image.load("sprites/wall3.png")
-rect = pygame.Rect((WIDTH-1)*TILESIZE,0,TILESIZE,TILESIZE)
-windowSurface.blit(image,rect)
-
-#draw left wall sand and right wall
-
-for col in range(0,WIDTH):
-	for row in range(1,HEIGHT-1):
-		if col == 0:
-			image = pygame.image.load("sprites/wall4.png")
-			rect = pygame.Rect(col*TILESIZE,row*TILESIZE,TILESIZE,TILESIZE)
-			windowSurface.blit(image,rect)
-		elif col == WIDTH-1:
-			image = pygame.image.load("sprites/wall5.png")
-			rect = pygame.Rect(col*TILESIZE,row*TILESIZE,TILESIZE,TILESIZE)
-			windowSurface.blit(image,rect)
-		else:
-			image = pygame.image.load("sprites/sand.png")
-			rect = pygame.Rect(col*TILESIZE,row*TILESIZE,TILESIZE,TILESIZE)
-			windowSurface.blit(image,rect)
-#draw lower wall
-image = pygame.image.load("sprites/wall6.png")
-rect = pygame.Rect(0,(HEIGHT-1)*TILESIZE,TILESIZE,TILESIZE)
-windowSurface.blit(image,rect)
+sandimage = pygame.image.load("sprites/sand.png")
+lwallimage = pygame.image.load("sprites/leftwall.png")
+rwallimage = pygame.image.load("sprites/rightwall.png")
+topwallimage = pygame.image.load("sprites/upperwall.png")
+botwallimage = pygame.image.load("sprites/lowerwall.png")
 
 
-image = pygame.image.load("sprites/wall7.png")
-for col in range(1,WIDTH-1):
-	rect = pygame.Rect(col*TILESIZE,(HEIGHT-1)*TILESIZE,TILESIZE,TILESIZE)
-	windowSurface.blit(image,rect)
+sandrect = pygame.Rect(0,0,TILESIZE*WIDTH,TILESIZE*HEIGHT)
+lwallrect = pygame.Rect(0,0,TILESIZE,TILESIZE*HEIGHT)
+rwallrect = pygame.Rect(TILESIZE*(WIDTH-1),0,TILESIZE,TILESIZE*HEIGHT)
+topwallrect = pygame.Rect(TILESIZE,0,TILESIZE*(WIDTH-2),TILESIZE)
+botwallrect = pygame.Rect(TILESIZE,TILESIZE*(HEIGHT-1),TILESIZE*(WIDTH-2),TILESIZE)
 
 
-image = pygame.image.load("sprites/wall8.png")
-rect = pygame.Rect((WIDTH-1)*TILESIZE,(HEIGHT-1)*TILESIZE,TILESIZE,TILESIZE)
-windowSurface.blit(image,rect)
+windowSurface.blit(sandimage,sandrect)
+windowSurface.blit(lwallimage,lwallrect)
+windowSurface.blit(rwallimage,rwallrect)
+windowSurface.blit(topwallimage,topwallrect)
+windowSurface.blit(botwallimage,botwallrect)
+
+
 	
 # Draw the window onto the screen.
 pygame.display.update()
