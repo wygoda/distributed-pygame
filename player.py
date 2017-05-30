@@ -12,6 +12,7 @@ class Player:
         self.angle = 0
         self.angleRad = 0
         self.bullets = []
+        self.dead = False
 
     def shoot(self):
         b = Bullet(-1, self)

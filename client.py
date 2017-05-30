@@ -63,75 +63,74 @@ while True:
 			p1 = p
 			break
 
-	mouse_pos = pygame.mouse.get_pos()
-	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
-	p1.angle = math.degrees(p1.angleRad)
-	# print(str(mouse_pos) + " " + str(p1.angleRad))
+	if not p1.dead:
+		mouse_pos = pygame.mouse.get_pos()
+		p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
+		p1.angle = math.degrees(p1.angleRad)
+		# print(str(mouse_pos) + " " + str(p1.angleRad))
 
-	# Check for events.
-	for event in pygame.event.get():
-		if event.type == QUIT:
-			pygame.quit()
-			sys.exit()
-		if event.type == KEYDOWN:
-			# Change the keyboard variables.
-			if event.key == K_LEFT or event.key == K_a:
-				moveRight = False
-				moveLeft = True
-			if event.key == K_RIGHT or event.key == K_d:
-				moveLeft = False
-				moveRight = True
-			if event.key == K_UP or event.key == K_w:
-				moveDown = False
-				moveUp = True
-			if event.key == K_DOWN or event.key == K_s:
-				moveUp = False
-				moveDown = True
-		if event.type == KEYUP:
-			if event.key == K_ESCAPE:
+		# Check for events.
+		for event in pygame.event.get():
+			if event.type == QUIT:
 				pygame.quit()
 				sys.exit()
-			if event.key == K_LEFT or event.key == K_a:
-				moveLeft = False
-			if event.key == K_RIGHT or event.key == K_d:
-				moveRight = False
-			if event.key == K_UP or event.key == K_w:
-				moveUp = False
-			if event.key == K_DOWN or event.key == K_s:
-				moveDown = False
-			if event.key == K_x:
-				p1.shoot()
-				print(p1)
+			if event.type == KEYDOWN:
+				# Change the keyboard variables.
+				if event.key == K_LEFT or event.key == K_a:
+					moveRight = False
+					moveLeft = True
+				if event.key == K_RIGHT or event.key == K_d:
+					moveLeft = False
+					moveRight = True
+				if event.key == K_UP or event.key == K_w:
+					moveDown = False
+					moveUp = True
+				if event.key == K_DOWN or event.key == K_s:
+					moveUp = False
+					moveDown = True
+			if event.type == KEYUP:
+				if event.key == K_ESCAPE:
+					pygame.quit()
+					sys.exit()
+				if event.key == K_LEFT or event.key == K_a:
+					moveLeft = False
+				if event.key == K_RIGHT or event.key == K_d:
+					moveRight = False
+				if event.key == K_UP or event.key == K_w:
+					moveUp = False
+				if event.key == K_DOWN or event.key == K_s:
+					moveDown = False
+				if event.key == K_x:
+					p1.shoot()
+					print(p1)
 
-	windowSurface.fill(WHITE)
+		windowSurface.fill(WHITE)
 
-	# Move the player.
-	if moveDown and p1.rect.bottom < WINDOWHEIGHT:
-		p1.rect.top += MOVESPEED
-	if moveUp and p1.rect.top > 0:
-		p1.rect.top -= MOVESPEED
-	if moveLeft and p1.rect.left > 0:
-		p1.rect.left -= MOVESPEED
-	if moveRight and p1.rect.right < WINDOWWIDTH:
-		p1.rect.right += MOVESPEED
+		# Move the player.
+		if moveDown and p1.rect.bottom < WINDOWHEIGHT:
+			p1.rect.top += MOVESPEED
+		if moveUp and p1.rect.top > 0:
+			p1.rect.top -= MOVESPEED
+		if moveLeft and p1.rect.left > 0:
+			p1.rect.left -= MOVESPEED
+		if moveRight and p1.rect.right < WINDOWWIDTH:
+			p1.rect.right += MOVESPEED
 
-	print(p1)
+		#Draw local player
+		rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
+		windowSurface.blit(rotatedPlayerImage, p1.rect)
+		for b in p1.bullets:
+			rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
+			windowSurface.blit(rotated_tmp_bullet_image, b.rect)
+
 	bin_player = pickle.dumps(p1)
 	sent_bytes_count = server_connection.send(bin_player)
 	if sent_bytes_count:
 		print("bin_player size: {}; sent_bytes_count: {}".format(len(bin_player), sent_bytes_count))
 
-
-	#Draw local player
-	rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
-	windowSurface.blit(rotatedPlayerImage, p1.rect)
-	for b in p1.bullets:
-		rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
-		windowSurface.blit(rotated_tmp_bullet_image, b.rect)
-
 	#Draw players from the server
 	for p in gamestate.players:
-		if p.id != p1.id:
+		if p.id != p1.id and not p.dead:
 			rotatedPlayerImage = rot_center(tmp_player_image, 90-p.angle)
 			# Draw the player onto the surface.
 			windowSurface.blit(rotatedPlayerImage, p.rect)
