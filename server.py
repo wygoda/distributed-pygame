@@ -98,10 +98,25 @@ class Server:
         accept_conn_thread.do_run = False
         accept_conn_thread.join()
 
-class Client(Thread):
+class Client:
     def __init__(self, sock, addr):
         self.sock = sock
         self.addr = addr
+
+class ClientThread(Thread):
+    def __init__(self, client):
+        self.client = client
+
+    def updateToClient(self):
+        pass
+
+    def updateFromClient(self):
+        pass
+
+    def run(self):
+        updateFromClient()
+        updateToClient()
+
 
 host, port = '192.168.1.110', 7777
 
