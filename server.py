@@ -4,7 +4,7 @@ import pygame, sys, pickle, random, socket
 # from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR, timeout
 from pygame.locals import *
 from player import Player
-from threading import Thread, Lock, currentThread
+from threading import Thread, Lock, currentThread, Condition
 from gamestate import Gamestate
 from bullet import Bullet
 from time import sleep
@@ -26,6 +26,8 @@ class Server:
 
         self.clients = {}
         self.clients_mutex = Lock()
+        self.gamestate_ready = False
+        self.gamestate_cond = Condition()
 
         self.gamestate = Gamestate()
 
