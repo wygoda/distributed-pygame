@@ -16,7 +16,7 @@ def rot_center(image, angle):
 
 host, port = 'localhost', 7777
 addr = (host, port)
-buf = 2048
+buf = 3072
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_connection.connect(addr)
 
@@ -51,12 +51,10 @@ fromBottom = False
 
 MOVESPEED = 6
 
-print("przed petla")
 #GAME LOOP
 while True:
 	bin_gamestate = server_connection.recv(buf)
 	gamestate = pickle.loads(bin_gamestate)
-	print("asd")
 	print("liczba graczy: {}".format(len(gamestate.players)))
 
 	for p in gamestate.players:
