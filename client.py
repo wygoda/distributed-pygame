@@ -31,7 +31,7 @@ def draw_youwin():
 	textrect.center = windowSurface.get_rect().center
 	windowSurface.blit(textobj, textrect)
 
-host, port = '192.168.1.110', 7777
+host, port = 'localhost', 7777
 addr = (host, port)
 buf = 3072
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,9 +44,28 @@ youwin_font = pygame.font.SysFont(None, 70)
 OVERHEADCOLOR = {1:(200,0,0), 2:(228,121,0), 3:(0,200,0)}
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-WINDOWWIDTH = 1024
-WINDOWHEIGHT = 640
-windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
+TILESIZE = 64
+WIDTH = 16
+HEIGHT = 10
+windowSurface = pygame.display.set_mode((TILESIZE*WIDTH,TILESIZE*HEIGHT), 0, 32)
+pygame.display.set_caption('SHOOTER')
+#=================================walls and stuff================================
+sandimage = pygame.image.load("sprites/sand.png")
+lwallimage = pygame.image.load("sprites/leftwall.png")
+rwallimage = pygame.image.load("sprites/rightwall.png")
+topwallimage = pygame.image.load("sprites/upperwall.png")
+botwallimage = pygame.image.load("sprites/lowerwall.png")
+
+
+sandrect = pygame.Rect(0,0,TILESIZE*WIDTH,TILESIZE*HEIGHT)
+lwallrect = pygame.Rect(0,0,TILESIZE,TILESIZE*HEIGHT)
+rwallrect = pygame.Rect(TILESIZE*(WIDTH-1),0,TILESIZE,TILESIZE*HEIGHT)
+topwallrect = pygame.Rect(TILESIZE,0,TILESIZE*(WIDTH-2),TILESIZE)
+botwallrect = pygame.Rect(TILESIZE,TILESIZE*(HEIGHT-1),TILESIZE*(WIDTH-2),TILESIZE)
+#================================================================================
+
+
+
 
 mainClock = pygame.time.Clock()
 
@@ -88,8 +107,12 @@ while True:
 	p1.angle = math.degrees(p1.angleRad)
 	# print(str(mouse_pos) + " " + str(p1.angleRad))
 
-	windowSurface.fill(WHITE)
-
+	windowSurface.blit(sandimage,sandrect)
+	windowSurface.blit(lwallimage,lwallrect)
+	windowSurface.blit(rwallimage,rwallrect)
+	windowSurface.blit(topwallimage,topwallrect)
+	windowSurface.blit(botwallimage,botwallrect)
+	
 	# Check for events.
 	for event in pygame.event.get():
 		if event.type == QUIT:
@@ -144,13 +167,13 @@ while True:
 				fromRight = True
 		# players.append(p1)#dodajemy do listy wczesniej skasowanego gracza
 		# Move the player.
-		if moveDown and p1.rect.bottom < WINDOWHEIGHT and not fromBottom:
+		if moveDown and p1.rect.bottom < TILESIZE*(HEIGHT-1) and not fromBottom:
 			p1.rect.top += MOVESPEED
-		if moveUp and p1.rect.top > 0 and not fromTop:
+		if moveUp and p1.rect.top > TILESIZE and not fromTop:
 			p1.rect.top -= MOVESPEED
-		if moveLeft and p1.rect.left > 0 and not fromLeft:
+		if moveLeft and p1.rect.left > TILESIZE and not fromLeft:
 			p1.rect.left -= MOVESPEED
-		if moveRight and p1.rect.right < WINDOWWIDTH and not fromRight:
+		if moveRight and p1.rect.right < TILESIZE*(WIDTH-1) and not fromRight:
 			p1.rect.right += MOVESPEED
 		fromTop=False;
 		fromBottom=False;

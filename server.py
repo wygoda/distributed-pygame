@@ -51,7 +51,7 @@ class Server:
                 self.gamestate.addPlayer(player)
                 bin_player = pickle.dumps(player)
                 client_sock.send(bin_player)
-                sleep(2)
+                sleep(4)
                 print("gamestate.players {}".format(len(self.gamestate.players)))
                 bin_gamestate = pickle.dumps(self.gamestate)
                 print("bin_gamestate {}".format(len(bin_gamestate)))
@@ -103,7 +103,7 @@ class Client:
         self.sock = sock
         self.addr = addr
 
-host, port = '192.168.1.110', 7777
+host, port = 'localhost', 7777
 
 #MAIN
 buf = 3072
