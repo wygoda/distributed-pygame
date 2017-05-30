@@ -16,6 +16,6 @@ class Bullet:
 
 		self.image = pygame.image.load("sprites/bullet.png")
 		self.image = pygame.transform.rotate(self.image,90 - player.angle)
-
+		self.rect.move_ip(self.velocityX*5,self.velocityY*5)
 	def update(self):
 		self.rect.move_ip(self.velocityX,self.velocityY)#move rect in place by the velocity

@@ -93,13 +93,16 @@ while True:
 				bullets.append(p1.shoot())
 
 	windowSurface.fill(WHITE)
-
+	
 	#stany do mowiace z ktorej strony jest kolizja
 	fromLeft = False
 	fromRight = False
 	fromTop = False
 	fromBottom = False
 	
+	
+	
+	#sprawdzanie kolizji gracza p1 z innymi graczami z listy players
 	players.remove(p1)#trzeba usunac bo inaczej wykrywa zderzenie z samym soba
 	indexOfOpponent = p1.rect.collidelist(players)#zwraca index zioma z ktorym sie zderza
 	if indexOfOpponent != -1:
@@ -112,10 +115,20 @@ while True:
 			fromLeft = True;
 		else:
 			fromRight = True
-	players.append(p1)
-	#tak to sie zczepiaja jak rzepy trzeba wyjsc z funckji jak z 1 strony bedzie kolizja
+	players.append(p1)#dodajemy do listy wczesniej skasowanego gracza
 	
-	#sprawdzam z ktorej strony jest ziom z ktorym sie zderzam
+	#sprawdzanie czy ktos dostal kulke
+	bulletsThatHit = []
+	for i in range(0,len(bullets)):
+		killedIndex = bullets[i].rect.collidelist(players)
+		if killedIndex!=-1:
+			killed = players[killedIndex]
+			players.remove(killed)
+			bulletsThatHit.append(bullets[i])
+	for bullet in bulletsThatHit:
+		bullets.remove(bullet)
+	
+	
 	# Move the player.
 	if moveDown and p1.rect.bottom < WINDOWHEIGHT and not fromBottom:
 		p1.rect.top += MOVESPEED
