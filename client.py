@@ -1,8 +1,9 @@
 #! /usr/bin/python3
 
-import pygame, sys, math, bullet, random
+import pygame, sys, math, bullet, random, socket, pickle
 from pygame.locals import *
 from player import Player
+from gamestate import Gamestate
 
 def rot_center(image, angle):
 	"""rotate an image while keeping its center and size"""
@@ -12,6 +13,12 @@ def rot_center(image, angle):
 	rot_rect.center = rot_image.get_rect().center
 	rot_image = rot_image.subsurface(rot_rect).copy()
 	return rot_image
+
+host, port = 'localhost', 7777
+addr = (host, port)
+buf = 1024
+server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_connection.connect(addr)
 
 pygame.init()
 
@@ -24,12 +31,16 @@ mainClock = pygame.time.Clock()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-p1 = Player(1, pygame.Rect(300,300,50,50))
+# p1 = Player(1, pygame.Rect(300,300,50,50))
+bin_recvd_player = server_connection.recv(buf)
+p1 = pickle.loads(bin_recvd_player)
 print(p1.rect)
-p1Image = p1.image
+tmp_player_image = pygame.image.load("sprites/cross.png")
+
+
 
 #bullety beda na serwerze
-bullets = []
+# bullets = []
 
 moveLeft = False
 moveRight = False
@@ -38,8 +49,14 @@ moveDown = False
 
 MOVESPEED = 6
 
+print("przed petla")
 #GAME LOOP
 while True:
+	bin_gamestate = server_connection.recv(buf)
+	gamestate = pickle.loads(bin_gamestate)
+	print("asd")
+	print("liczba graczy: {}".format(len(gamestate.players)))
+
 	mouse_pos = pygame.mouse.get_pos()
 	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
 	p1.angle = math.degrees(p1.angleRad)
@@ -77,7 +94,7 @@ while True:
 			if event.key == K_DOWN or event.key == K_s:
 				moveDown = False
 			if event.key == K_x:
-				bullets.append(p1.shoot())
+				p1.shoot()
 
 	windowSurface.fill(WHITE)
 
@@ -91,14 +108,31 @@ while True:
 	if moveRight and p1.rect.right < WINDOWWIDTH:
 		p1.rect.right += MOVESPEED
 
-	rotatedPlayerImage = rot_center(p1Image, 90-p1.angle)
-	# Draw the player onto the surface.
-	windowSurface.blit(rotatedPlayerImage, p1.rect)
+	print(p1)
+	bin_player = pickle.dumps(p1)
+	sent_bytes_count = server_connection.send(bin_player)
+	if sent_bytes_count:
+		print("bin_player size: {}; sent_bytes_count: {}".format(len(bin_player), sent_bytes_count))
 
-	for b in bullets:
-		b.update()
-	for b in bullets:
+
+	#Draw local player
+	rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
+	windowSurface.blit(rotatedPlayerImage, p1.rect)
+	for b in p1.bullets:
 		windowSurface.blit(b.image, b.rect)
+
+	#Draw players from the server
+	for p in gamestate.players:
+		if p.id != p1.id:
+			p_image = p.image
+			rotatedPlayerImage = rot_center(tmp_player_image, 90-p.angle)
+			# Draw the player onto the surface.
+			windowSurface.blit(rotatedPlayerImage, p.rect)
+
+			# Draw bullets
+			for b in p.bullets:
+				windowSurface.blit(b.image, b.rect)
+
 
 	pygame.display.update()
 	mainClock.tick(60)

@@ -7,6 +7,7 @@ from player import Player
 from threading import Thread, Lock, currentThread
 from gamestate import Gamestate
 from bullet import Bullet
+from time import sleep
 
 #server loop: check for incoming connections -> pygame computations -> send updates to clients -> repeat
 
@@ -45,14 +46,19 @@ class Server:
                 player_counter += 1
                 player = Player(player_counter, pygame.Rect(300,300,50,50)) #TODO: randomize spawn place
                 with self.clients_mutex:
-                    clients[player.id] = Client(client_sock, addr)
+                    self.clients[player.id] = Client(client_sock, addr)
                 #send this info to the client
                 self.gamestate.addPlayer(player)
                 bin_player = pickle.dumps(player)
                 client_sock.send(bin_player)
+                sleep(1)
+                print("gamestate.players {}".format(len(self.gamestate.players)))
                 bin_gamestate = pickle.dumps(self.gamestate)
-                client_sock.send(bin_gamestate)
-                print("accepted: playerid {}, addr {}".format(player.id, addr))
+                print("bin_gamestate {}".format(len(bin_gamestate)))
+                if client_sock.send(bin_gamestate):
+                    print("accepted: playerid {}, addr {}".format(player.id, addr))
+                else:
+                    print("failed")
 
     #SERVER LOOP
     def run(self):
@@ -62,19 +68,31 @@ class Server:
             # print("in the loop")
             #receiving data from clients, client have to send their player object,
             #bullets are stored in players to make it easier to transmit
-            for player_id, client in self.clients:
-                bin_data = client.sock.recv(buf)
-                #TODO: close() and remove from clients if no data
-                updated_player_data = pickle.loads(bin_data)
-                self.gamestate.updatePlayer(player_id, updated_player_data)
+            with self.clients_mutex:
+                for player_id in list(self.clients):
+                    client = self.clients[player_id]
+                    bin_data = client.sock.recv(buf)
+                    if bin_data:
+                        updated_player_data = pickle.loads(bin_data)
+                        # print(updated_player_data)
+                        self.gamestate.updatePlayer(player_id, updated_player_data)
+                        print("received update from {}".format(player_id))
+                    else:
+                        #close() and remove from clients if no data
+                        self.gamestate.removePlayer(player_id)
+                        client.sock.close()
+                        del(self.clients[player_id])
 
             #pygame computations (players positions, bullets, winning condition etc)
-            gamestate.update()
+            self.gamestate.update()
+            # if len(self.gamestate.players)>0:
+            #     print("player1 pos: {}".format(self.gamestate.players[0].rect))
 
             #sending updates to clients
             bin_gamestate = pickle.dumps(self.gamestate)
-            for player_id, client in self.clients:
-                client.sock.send(bin_gamestate)
+            with self.clients_mutex:
+                for player_id in list(self.clients):
+                    self.clients[player_id].sock.send(bin_gamestate)
 
         # print("koniec")
         accept_conn_thread.do_run = False

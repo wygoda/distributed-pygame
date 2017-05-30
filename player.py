@@ -15,3 +15,6 @@ class Player:
         b = Bullet(-1, self)
         self.bullets.append(b)
         return b
+
+    def __str__(self):
+        return "PLAYER: id:{}, {}".format(self.id, self.rect)
