@@ -17,13 +17,21 @@ def rot_center(image, angle):
 def draw_overhead_label(player):
 	color = OVERHEADCOLOR.get(player.hp, BLACK)
 	text = player.updateOverheadLabelText()
-	textobj = font.render(text, 1, color)
+	textobj = overhead_font.render(text, 1, color)
 	textrect = textobj.get_rect()
 	textrect.centerx = player.rect.centerx
 	textrect.centery = player.rect.centery - 30
 	windowSurface.blit(textobj, textrect)
 
-host, port = 'localhost', 7777
+def draw_youwin():
+	color = BLACK
+	text = "!!! WINNER WINNER CHICKEN DINNER !!!"
+	textobj = youwin_font.render(text, 1, color)
+	textrect = textobj.get_rect()
+	textrect.center = windowSurface.get_rect().center
+	windowSurface.blit(textobj, textrect)
+
+host, port = '192.168.1.110', 7777
 addr = (host, port)
 buf = 3072
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,12 +39,13 @@ server_connection.connect(addr)
 
 pygame.init()
 
-WINDOWWIDTH = 1024
-WINDOWHEIGHT = 640
-font = pygame.font.SysFont(None, 20)
+overhead_font = pygame.font.SysFont(None, 20)
+youwin_font = pygame.font.SysFont(None, 70)
 OVERHEADCOLOR = {1:(200,0,0), 2:(228,121,0), 3:(0,200,0)}
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+WINDOWWIDTH = 1024
+WINDOWHEIGHT = 640
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 
 mainClock = pygame.time.Clock()
@@ -46,6 +55,8 @@ p1 = pickle.loads(bin_recvd_player)
 print(p1.rect)
 player_image = pygame.image.load("sprites/player.png")
 bullet_image = pygame.image.load("sprites/bullet.png")
+
+winner = False
 
 moveLeft = False
 moveRight = False
@@ -159,6 +170,7 @@ while True:
 	if sent_bytes_count:
 		print("bin_player size: {}; sent_bytes_count: {}".format(len(bin_player), sent_bytes_count))
 
+	winner = True if len(gamestate.players) > 1 else False
 
 	#Draw players from the server
 	for p in gamestate.players:
@@ -173,6 +185,10 @@ while True:
 				rotated_bullet_image = pygame.transform.rotate(bullet_image,90 - b.owner.angle)
 				windowSurface.blit(rotated_bullet_image, b.rect)
 
+			winner = False #if we draw other players, they aren't dead thus we aren't a winner
+
+	if winner:
+		draw_youwin()
 
 	pygame.display.update()
 	mainClock.tick(60)

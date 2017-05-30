@@ -103,7 +103,7 @@ class Client:
         self.sock = sock
         self.addr = addr
 
-host, port = 'localhost', 7777
+host, port = '192.168.1.110', 7777
 
 #MAIN
 buf = 3072
