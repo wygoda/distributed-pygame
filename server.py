@@ -46,7 +46,7 @@ class Server:
                 player_counter += 1
                 player = Player(player_counter, pygame.Rect(300,300,50,50)) #TODO: randomize spawn place
                 with self.clients_mutex:
-                    self.clients[player.id] = Client(client_sock, addr)
+                    self.clients[player.id] = ClientThread(Client(client_sock, addr))
                 #send this info to the client
                 self.gamestate.addPlayer(player)
                 bin_player = pickle.dumps(player)
@@ -57,6 +57,7 @@ class Server:
                 print("bin_gamestate {}".format(len(bin_gamestate)))
                 if client_sock.send(bin_gamestate):
                     print("accepted: playerid {}, addr {}".format(player.id, addr))
+                    self.clients[player.id]
                 else:
                     print("failed")
 
@@ -115,6 +116,7 @@ class ClientThread(Thread):
 
     def run(self):
         updateFromClient()
+        #cond_lock here to check if gamestate is ready to be sent to clients
         updateToClient()
 
 
