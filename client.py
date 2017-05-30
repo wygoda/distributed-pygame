@@ -16,7 +16,7 @@ def rot_center(image, angle):
 
 host, port = 'localhost', 7777
 addr = (host, port)
-buf = 1024
+buf = 2048
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_connection.connect(addr)
 
@@ -126,19 +126,20 @@ while True:
 	rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
 	windowSurface.blit(rotatedPlayerImage, p1.rect)
 	for b in p1.bullets:
-		windowSurface.blit(tmp_bullet_image, b.rect)
+		rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
+		windowSurface.blit(rotated_tmp_bullet_image, b.rect)
 
 	#Draw players from the server
 	for p in gamestate.players:
 		if p.id != p1.id:
-			p_image = p.image
 			rotatedPlayerImage = rot_center(tmp_player_image, 90-p.angle)
 			# Draw the player onto the surface.
 			windowSurface.blit(rotatedPlayerImage, p.rect)
 
 			# Draw bullets
 			for b in p.bullets:
-				windowSurface.blit(tmp_bullet_image, b.rect)
+				rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
+				windowSurface.blit(rotated_tmp_bullet_image, b.rect)
 
 
 	pygame.display.update()

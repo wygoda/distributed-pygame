@@ -105,6 +105,6 @@ class Client:
 host, port = 'localhost', 7777
 
 #MAIN
-buf = 1024
+buf = 2048
 s = Server(host, port, buf)
 s.run()

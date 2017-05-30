@@ -10,7 +10,7 @@ class Bullet:
 		self.owner = player
 		self.rect = pygame.Rect(player.rect.centerx - bullet_size/2, player.rect.centery - bullet_size/2, bullet_size, bullet_size)
 		self.speed = 10
-		self.ttl = 600 #time to live
+		self.ttl = 120 #time to live
 
 		#components of bullet velocity vector
 		self.velocityX = -math.cos(player.angleRad)*self.speed
@@ -21,7 +21,6 @@ class Bullet:
 		# self.image = pygame.transform.rotate(self.image,90 - player.angle)
 
 	def update(self):
-		print("bullet.update called")
 		self.rect.move_ip(self.velocityX,self.velocityY)#move rect in place by the velocity
 		self.ttl -= 1
 
