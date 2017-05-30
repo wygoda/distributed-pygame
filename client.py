@@ -33,7 +33,7 @@ def draw_youwin():
 
 host, port = 'localhost', 7777
 addr = (host, port)
-buf = 3072
+buf = 4096
 server_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_connection.connect(addr)
 
@@ -44,20 +44,21 @@ youwin_font = pygame.font.SysFont(None, 70)
 OVERHEADCOLOR = {1:(200,0,0), 2:(228,121,0), 3:(0,200,0)}
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+SANDY = (213, 157, 22)
 TILESIZE = 64
 WIDTH = 16
 HEIGHT = 10
 windowSurface = pygame.display.set_mode((TILESIZE*WIDTH,TILESIZE*HEIGHT), 0, 32)
 pygame.display.set_caption('SHOOTER')
 #=================================walls and stuff================================
-sandimage = pygame.image.load("sprites/sand.png")
+#sandimage = pygame.image.load("sprites/sand.png")
 lwallimage = pygame.image.load("sprites/leftwall.png")
 rwallimage = pygame.image.load("sprites/rightwall.png")
 topwallimage = pygame.image.load("sprites/upperwall.png")
 botwallimage = pygame.image.load("sprites/lowerwall.png")
 
 
-sandrect = pygame.Rect(0,0,TILESIZE*WIDTH,TILESIZE*HEIGHT)
+#sandrect = pygame.Rect(0,0,TILESIZE*WIDTH,TILESIZE*HEIGHT)
 lwallrect = pygame.Rect(0,0,TILESIZE,TILESIZE*HEIGHT)
 rwallrect = pygame.Rect(TILESIZE*(WIDTH-1),0,TILESIZE,TILESIZE*HEIGHT)
 topwallrect = pygame.Rect(TILESIZE,0,TILESIZE*(WIDTH-2),TILESIZE)
@@ -107,7 +108,8 @@ while True:
 	p1.angle = math.degrees(p1.angleRad)
 	# print(str(mouse_pos) + " " + str(p1.angleRad))
 
-	windowSurface.blit(sandimage,sandrect)
+	#windowSurface.blit(sandimage,sandrect)
+	windowSurface.fill(SANDY)
 	windowSurface.blit(lwallimage,lwallrect)
 	windowSurface.blit(rwallimage,rwallrect)
 	windowSurface.blit(topwallimage,topwallrect)
