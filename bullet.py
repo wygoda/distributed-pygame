@@ -16,8 +16,9 @@ class Bullet:
 		self.velocityX = -math.cos(player.angleRad)*self.speed
 		self.velocityY = -math.sin(player.angleRad)*self.speed
 
-		self.image = pygame.image.load("sprites/bullet.png")
-		self.image = pygame.transform.rotate(self.image,90 - player.angle)
+		#it generates a pickling issue on windows
+		# self.image = pygame.image.load("sprites/bullet.png")
+		# self.image = pygame.transform.rotate(self.image,90 - player.angle)
 
 	def update(self):
 		print("bullet.update called")

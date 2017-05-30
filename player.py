@@ -6,7 +6,9 @@ class Player:
     def __init__(self, id, rect):
         self.id = id
         self.rect = rect
-        self.image = pygame.image.load("sprites/cross.png")
+
+        #it generates a pickling issue on windows
+        # self.image = pygame.image.load("sprites/cross.png")
         self.angle = 0
         self.angleRad = 0
         self.bullets = []

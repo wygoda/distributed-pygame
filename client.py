@@ -138,8 +138,8 @@ while True:
 
 			# Draw bullets
 			for b in p.bullets:
-				windowSurface.blit(b.image, b.rect)
+				windowSurface.blit(tmp_bullet_image, b.rect)
 
 
 	pygame.display.update()
-	mainClock.tick(30)
+	mainClock.tick(60)
