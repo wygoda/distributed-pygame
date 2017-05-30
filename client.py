@@ -36,6 +36,7 @@ bin_recvd_player = server_connection.recv(buf)
 p1 = pickle.loads(bin_recvd_player)
 print(p1.rect)
 tmp_player_image = pygame.image.load("sprites/cross.png")
+tmp_bullet_image = pygame.image.load("sprites/bullet.png")
 
 
 
@@ -56,6 +57,11 @@ while True:
 	gamestate = pickle.loads(bin_gamestate)
 	print("asd")
 	print("liczba graczy: {}".format(len(gamestate.players)))
+
+	for p in gamestate.players:
+		if p.id == p1.id:
+			p1 = p
+			break
 
 	mouse_pos = pygame.mouse.get_pos()
 	p1.angleRad = math.atan2(p1.rect.centery - mouse_pos[1], p1.rect.centerx - mouse_pos[0])
@@ -120,7 +126,7 @@ while True:
 	rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
 	windowSurface.blit(rotatedPlayerImage, p1.rect)
 	for b in p1.bullets:
-		windowSurface.blit(b.image, b.rect)
+		windowSurface.blit(tmp_bullet_image, b.rect)
 
 	#Draw players from the server
 	for p in gamestate.players:
@@ -136,4 +142,4 @@ while True:
 
 
 	pygame.display.update()
-	mainClock.tick(60)
+	mainClock.tick(30)
