@@ -38,15 +38,16 @@ print(p1.rect)
 tmp_player_image = pygame.image.load("sprites/cross.png")
 tmp_bullet_image = pygame.image.load("sprites/bullet.png")
 
-
-
-#bullety beda na serwerze
-# bullets = []
-
 moveLeft = False
 moveRight = False
 moveUp = False
 moveDown = False
+
+#stany do mowiace z ktorej strony jest kolizja
+fromLeft = False
+fromRight = False
+fromTop = False
+fromBottom = False
 
 MOVESPEED = 6
 
@@ -103,18 +104,40 @@ while True:
 			if event.key == K_DOWN or event.key == K_s:
 				moveDown = False
 		if event.type == pygame.MOUSEBUTTONDOWN:
-			p1.shoot()
-			# if pygame.mouse.get_pressed()[0]:
+			if pygame.mouse.get_pressed()[0]:
+				p1.shoot()
 	if not p1.dead:
+		#sprawdzanie kolizji gracza p1 z innymi graczami z listy players
+		possible_collisions = [p for p in gamestate.players if p.id != p1.id and not p.dead]#players.remove(p1)#trzeba usunac bo inaczej wykrywa zderzenie z samym soba
+		indexOfOpponent = p1.rect.collidelist(possible_collisions)#zwraca index zioma z ktorym sie zderza
+		if indexOfOpponent != -1:
+			opponent_id = possible_collisions[indexOfOpponent].id
+			for p in gamestate.players:
+				if p.id == opponent_id:
+					opponent = p.rect
+					break
+			if p1.rect.bottom >= opponent.top and p1.rect.top <= opponent.top:
+				fromBottom = True
+			else:
+				fromTop = True;
+			if p1.rect.left <= opponent.right and p1.rect.left >=  opponent.left:
+				fromLeft = True;
+			else:
+				fromRight = True
+		# players.append(p1)#dodajemy do listy wczesniej skasowanego gracza
 		# Move the player.
-		if moveDown and p1.rect.bottom < WINDOWHEIGHT:
+		if moveDown and p1.rect.bottom < WINDOWHEIGHT and not fromBottom:
 			p1.rect.top += MOVESPEED
-		if moveUp and p1.rect.top > 0:
+		if moveUp and p1.rect.top > 0 and not fromTop:
 			p1.rect.top -= MOVESPEED
-		if moveLeft and p1.rect.left > 0:
+		if moveLeft and p1.rect.left > 0 and not fromLeft:
 			p1.rect.left -= MOVESPEED
-		if moveRight and p1.rect.right < WINDOWWIDTH:
+		if moveRight and p1.rect.right < WINDOWWIDTH and not fromRight:
 			p1.rect.right += MOVESPEED
+		fromTop=False;
+		fromBottom=False;
+		fromLeft=False;
+		fromRight=False;
 
 		#Draw local player
 		rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
