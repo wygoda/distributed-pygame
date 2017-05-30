@@ -6,7 +6,7 @@ class Player:
     def __init__(self, id, rect):
         self.id = id
         self.rect = rect
-        self.image = pygame.image.load("sprites/cross.png")
+        self.image = pygame.image.load("sprites/player.png")
         self.angle = 0
         self.angleRad = 0
 

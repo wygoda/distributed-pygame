@@ -7,7 +7,7 @@ bullet_size = 10
 class Bullet:
 	def __init__(self, id, player):
 		self.id = id
-		self.rect = pygame.Rect(player.rect.centerx - bullet_size/2, player.rect.centery - bullet_size/2, bullet_size, bullet_size)
+		self.rect = pygame.Rect(player.rect.centerx - bullet_size/2+2, player.rect.centery - bullet_size/2, bullet_size, bullet_size)
 		self.speed = 10
 
 		#components of bullet velocity vector

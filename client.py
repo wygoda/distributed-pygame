@@ -26,16 +26,16 @@ mainClock = pygame.time.Clock()
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-p1 = Player(1, pygame.Rect(300,300,50,50))
+p1 = Player(1, pygame.Rect(300,300,30,30))
 p1Image = p1.image
 
 
 #zmienne do testowania kolizji pomiedzy graczami
 players = []
 players.append(p1)
-players.append(Player(2, pygame.Rect(200,200,50,50)))
-players.append(Player(3,pygame.Rect(200,400,50,50)))
-players.append(Player(4,pygame.Rect(400,200,50,50)))
+players.append(Player(2, pygame.Rect(200,200,30,30)))
+players.append(Player(3,pygame.Rect(200,400,30,30)))
+players.append(Player(4,pygame.Rect(400,200,30,30)))
 
 
 
