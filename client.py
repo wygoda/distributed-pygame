@@ -4,6 +4,7 @@ import pygame, sys, math, bullet, random
 from pygame.locals import *
 from player import Player
 
+# obracanie obiektow z zachowaniem ich rozmiaru i srodka
 def rot_center(image, angle):
 	"""rotate an image while keeping its center and size"""
 	orig_rect = image.get_rect()
@@ -12,7 +13,8 @@ def rot_center(image, angle):
 	rot_rect.center = rot_image.get_rect().center
 	rot_image = rot_image.subsurface(rot_rect).copy()
 	return rot_image
-
+	
+	
 pygame.init()
 
 WINDOWWIDTH = 700
@@ -27,6 +29,16 @@ BLACK = (0, 0, 0)
 p1 = Player(1, pygame.Rect(300,300,50,50))
 p1Image = p1.image
 
+
+#zmienne do testowania kolizji pomiedzy graczami
+players = []
+players.append(p1)
+players.append(Player(2, pygame.Rect(200,200,50,50)))
+players.append(Player(3,pygame.Rect(200,400,50,50)))
+players.append(Player(4,pygame.Rect(400,200,50,50)))
+
+
+
 #bullety beda na serwerze
 bullets = []
 
@@ -34,8 +46,9 @@ moveLeft = False
 moveRight = False
 moveUp = False
 moveDown = False
-
 MOVESPEED = 6
+
+
 
 #GAME LOOP
 while True:
@@ -81,20 +94,47 @@ while True:
 
 	windowSurface.fill(WHITE)
 
+	#stany do mowiace z ktorej strony jest kolizja
+	fromLeft = False
+	fromRight = False
+	fromTop = False
+	fromBottom = False
+	
+	players.remove(p1)#trzeba usunac bo inaczej wykrywa zderzenie z samym soba
+	indexOfOpponent = p1.rect.collidelist(players)#zwraca index zioma z ktorym sie zderza
+	if indexOfOpponent != -1:
+		opponent = players[indexOfOpponent].rect
+		if p1.rect.bottom >= opponent.top and p1.rect.top <= opponent.top:
+			fromBottom = True
+		else:
+			fromTop = True;
+		if p1.rect.left <= opponent.right and p1.rect.left >=  opponent.left:
+			fromLeft = True;
+		else:
+			fromRight = True
+	players.append(p1)
+	#tak to sie zczepiaja jak rzepy trzeba wyjsc z funckji jak z 1 strony bedzie kolizja
+	
+	#sprawdzam z ktorej strony jest ziom z ktorym sie zderzam
 	# Move the player.
-	if moveDown and p1.rect.bottom < WINDOWHEIGHT:
+	if moveDown and p1.rect.bottom < WINDOWHEIGHT and not fromBottom:
 		p1.rect.top += MOVESPEED
-	if moveUp and p1.rect.top > 0:
+	if moveUp and p1.rect.top > 0 and not fromTop:
 		p1.rect.top -= MOVESPEED
-	if moveLeft and p1.rect.left > 0:
+	if moveLeft and p1.rect.left > 0 and not fromLeft:
 		p1.rect.left -= MOVESPEED
-	if moveRight and p1.rect.right < WINDOWWIDTH:
+	if moveRight and p1.rect.right < WINDOWWIDTH and not fromRight:
 		p1.rect.right += MOVESPEED
+	fromTop=False;
+	fromBottom=False;
+	fromLeft=False;
+	fromRight=False;
 
 	rotatedPlayerImage = rot_center(p1Image, 90-p1.angle)
 	# Draw the player onto the surface.
-	windowSurface.blit(rotatedPlayerImage, p1.rect)
-
+	#windowSurface.blit(rotatedPlayerImage, p1.rect)
+	for p in players:
+		windowSurface.blit(rotatedPlayerImage, p.rect)
 	for b in bullets:
 		b.update()
 	for b in bullets:
