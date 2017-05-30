@@ -35,8 +35,8 @@ BLACK = (0, 0, 0)
 bin_recvd_player = server_connection.recv(buf)
 p1 = pickle.loads(bin_recvd_player)
 print(p1.rect)
-tmp_player_image = pygame.image.load("sprites/cross.png")
-tmp_bullet_image = pygame.image.load("sprites/bullet.png")
+player_image = pygame.image.load("sprites/player.png")
+bullet_image = pygame.image.load("sprites/bullet.png")
 
 moveLeft = False
 moveRight = False
@@ -140,11 +140,11 @@ while True:
 		fromRight=False;
 
 		#Draw local player
-		rotatedPlayerImage = rot_center(tmp_player_image, 90-p1.angle)
+		rotatedPlayerImage = rot_center(player_image, 90-p1.angle)
 		windowSurface.blit(rotatedPlayerImage, p1.rect)
 		for b in p1.bullets:
-			rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
-			windowSurface.blit(rotated_tmp_bullet_image, b.rect)
+			rotated_bullet_image = pygame.transform.rotate(bullet_image,90 - b.owner.angle)
+			windowSurface.blit(rotated_bullet_image, b.rect)
 
 	bin_player = pickle.dumps(p1)
 	sent_bytes_count = server_connection.send(bin_player)
@@ -155,14 +155,14 @@ while True:
 	#Draw players from the server
 	for p in gamestate.players:
 		if p.id != p1.id and not p.dead:
-			rotatedPlayerImage = rot_center(tmp_player_image, 90-p.angle)
+			rotatedPlayerImage = rot_center(player_image, 90-p.angle)
 			# Draw the player onto the surface.
 			windowSurface.blit(rotatedPlayerImage, p.rect)
 
 			# Draw bullets
 			for b in p.bullets:
-				rotated_tmp_bullet_image = pygame.transform.rotate(tmp_bullet_image,90 - b.owner.angle)
-				windowSurface.blit(rotated_tmp_bullet_image, b.rect)
+				rotated_bullet_image = pygame.transform.rotate(bullet_image,90 - b.owner.angle)
+				windowSurface.blit(rotated_bullet_image, b.rect)
 
 
 	pygame.display.update()
