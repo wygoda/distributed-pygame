@@ -73,8 +73,11 @@ class Server:
                     client = self.clients[player_id]
                     bin_data = client.sock.recv(buf)
                     if bin_data:
-                        updated_player_data = pickle.loads(bin_data)
-                        self.gamestate.updatePlayer(player_id, updated_player_data)
+                        try:
+                            updated_player_data = pickle.loads(bin_data)
+                            self.gamestate.updatePlayer(player_id, updated_player_data)
+                        except:
+                            print("Error while receiving data from player {}".format(player_id))
                     else:
                         print("removePlayer")
                         #close() and remove from clients if no data

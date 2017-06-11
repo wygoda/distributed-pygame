@@ -93,8 +93,11 @@ MOVESPEED = 6
 
 #GAME LOOP
 while True:
-	bin_gamestate = server_connection.recv(buf)
-	gamestate = pickle.loads(bin_gamestate)
+	try:
+		bin_gamestate = server_connection.recv(buf)
+		gamestate = pickle.loads(bin_gamestate)
+	except:
+		print("Error while receiving data from server")
 	print("liczba graczy: {}".format(len(gamestate.players)))
 
 	for p in gamestate.players:
@@ -114,7 +117,7 @@ while True:
 	windowSurface.blit(rwallimage,rwallrect)
 	windowSurface.blit(topwallimage,topwallrect)
 	windowSurface.blit(botwallimage,botwallrect)
-	
+
 	# Check for events.
 	for event in pygame.event.get():
 		if event.type == QUIT:
