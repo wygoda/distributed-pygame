@@ -82,7 +82,10 @@ moveLeft = False
 moveRight = False
 moveUp = False
 moveDown = False
+isShooting = False
 
+fireTime = pygame.time.get_ticks()# time of last shoot
+fireDelay = 400#ms
 #stany do mowiace z ktorej strony jest kolizja
 fromLeft = False
 fromRight = False
@@ -148,7 +151,10 @@ while True:
 				moveDown = False
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			if pygame.mouse.get_pressed()[0]:
-				p1.shoot()
+				isShooting = True
+		if event.type == pygame.MOUSEBUTTONUP:
+			if not pygame.mouse.get_pressed()[0]:
+				isShooting = False
 	if not p1.dead:
 		#sprawdzanie kolizji gracza p1 z innymi graczami z listy players
 		possible_collisions = [p for p in gamestate.players if p.id != p1.id and not p.dead]#players.remove(p1)#trzeba usunac bo inaczej wykrywa zderzenie z samym soba
@@ -181,7 +187,13 @@ while True:
 		fromBottom=False;
 		fromLeft=False;
 		fromRight=False;
-
+		#Shoots if player is pressing left mouse button
+		if isShooting:
+			now = pygame.time.get_ticks()
+			if now > fireTime + fireDelay:
+				p1.shoot()
+				fireTime = now
+			
 		#Draw local player
 		rotatedPlayerImage = rot_center(player_image, 90-p1.angle)
 		windowSurface.blit(rotatedPlayerImage, p1.rect)
